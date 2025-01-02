@@ -1,9 +1,21 @@
 import { Pressable, SafeAreaView, StyleSheet, Text } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as Font from "expo-font";
 
 const App = () => {
+	const [fontsLoaded, setFontsLoaded] = useState(false);
 	const [grade, setGrade] = useState<number | "INTRO">(0);
+
+	useEffect(() => {
+		Font.loadAsync({
+			Rockledge: require("../bould/assets/fonts/Rockledge-9YYWB.otf")
+		}).then(() => setFontsLoaded(true));
+	}, []);
+
+	if (!fontsLoaded) {
+		return null;
+	}
 
 	return (
 		<SafeAreaView
@@ -25,14 +37,14 @@ const App = () => {
 				style={({ pressed }) => [
 					{
 						alignItems: "center",
-						height: 48,
+						height: 96,
 						justifyContent: "center",
 						opacity: pressed ? 0.6 : 1,
-						width: 48
+						width: 96
 					}
 				]}
 			>
-				<Feather name="chevron-up" style={styles.text} />
+				<Feather name="chevron-up" style={[styles.text]} />
 			</Pressable>
 			<Text style={styles.text}>V{grade}</Text>
 			<Pressable
@@ -46,10 +58,10 @@ const App = () => {
 				style={({ pressed }) => [
 					{
 						alignItems: "center",
-						height: 48,
+						height: 96,
 						justifyContent: "center",
 						opacity: pressed ? 0.6 : 1,
-						width: 48
+						width: 96
 					}
 				]}
 			>
@@ -60,7 +72,12 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-	text: { color: "#F5F5F5", fontSize: 32 }
+	text: {
+		color: "#F5F5F5",
+		fontFamily: "Rockledge",
+		fontSize: 64,
+		textAlign: "center"
+	}
 });
 
 export default App;
