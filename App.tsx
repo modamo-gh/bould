@@ -2,6 +2,7 @@ import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import * as Font from "expo-font";
+import Timer from "./src/components/Timer";
 
 const App = () => {
 	const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -29,7 +30,7 @@ const App = () => {
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<View style={styles.counterContainer}>
+			{/* <View style={styles.counterContainer}>
 				<Pressable
 					onPress={() => {
 						if (grade === "INTRO") {
@@ -72,7 +73,8 @@ const App = () => {
 				>
 					<Text style={styles.text}>SENT</Text>
 				</Pressable>
-			</View>
+			</View> */}
+      <Timer duration={60}/>
 		</SafeAreaView>
 	);
 };
