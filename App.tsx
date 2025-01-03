@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import * as Font from "expo-font";
 import Timer from "./src/components/Timer";
 
+const gradePassFailMap = new Map<
+	number | "INTRO",
+	{ send: number; didNotSend: number }
+>();
+
 const App = () => {
 	const [isFirstClimb, setIsFirstClimb] = useState(true);
 	const [duration, setDuration] = useState(120);
@@ -77,6 +82,16 @@ const App = () => {
 									setDuration(duration + 60);
 								}
 
+								const stats = gradePassFailMap.get(grade) || {
+									send: 0,
+									didNotSend: 0
+								};
+
+								stats.didNotSend = stats.didNotSend + 1;
+								gradePassFailMap.set(grade, stats);
+
+								console.log(gradePassFailMap);
+
 								setIsTimerShowing(!isTimerShowing);
 							}}
 							style={[
@@ -95,6 +110,17 @@ const App = () => {
 								} else if (duration - 60 >= 60) {
 									setDuration(duration - 60);
 								}
+
+								const stats = gradePassFailMap.get(grade) || {
+									send: 0,
+									didNotSend: 0
+								};
+
+								stats.send = stats.send + 1;
+								gradePassFailMap.set(grade, stats);
+
+								console.log(gradePassFailMap);
+
 								setIsTimerShowing(!isTimerShowing);
 							}}
 							style={[
