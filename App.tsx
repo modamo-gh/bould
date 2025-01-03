@@ -3,11 +3,15 @@ import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import * as Font from "expo-font";
 import Timer from "./src/components/Timer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Haptics from "expo-haptics";
 
 const gradePassFailMap = new Map<
 	number | "INTRO",
 	{ send: number; didNotSend: number }
 >();
+
+let data;
 
 const App = () => {
 	const [isFirstClimb, setIsFirstClimb] = useState(true);
@@ -20,6 +24,18 @@ const App = () => {
 		Font.loadAsync({
 			Rockledge: require("../bould/assets/fonts/Rockledge-9YYWB.otf")
 		}).then(() => setFontsLoaded(true));
+
+		const loadData = async () => {
+			const d = await AsyncStorage.getItem("zzzzzz");
+
+			if (d) {
+				return d;
+			} else {
+				return {};
+			}
+		};
+
+		data = loadData();
 	}, []);
 
 	if (!fontsLoaded) {
@@ -43,6 +59,8 @@ const App = () => {
 					<View style={styles.counterContainer}>
 						<Pressable
 							onPress={() => {
+								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
 								if (grade === "INTRO") {
 									setGrade(0);
 								} else if (typeof grade === "number") {
@@ -56,6 +74,8 @@ const App = () => {
 						<Text style={styles.text}>V{grade}</Text>
 						<Pressable
 							onPress={() => {
+								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
 								if (
 									typeof grade === "number" &&
 									grade - 1 >= 0
@@ -76,6 +96,8 @@ const App = () => {
 					<View style={styles.buttonContainer}>
 						<Pressable
 							onPress={() => {
+								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
 								if (isFirstClimb) {
 									setIsFirstClimb(false);
 								} else if (duration + 60 <= 180) {
@@ -105,6 +127,8 @@ const App = () => {
 						</Pressable>
 						<Pressable
 							onPress={() => {
+								Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
 								if (isFirstClimb) {
 									setIsFirstClimb(false);
 								} else if (duration - 60 >= 60) {
