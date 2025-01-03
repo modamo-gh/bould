@@ -7,6 +7,7 @@ import Animated, {
 	withTiming
 } from "react-native-reanimated";
 import Svg, { Circle } from "react-native-svg";
+import * as Haptics from "expo-haptics";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -25,12 +26,14 @@ const Timer = ({ duration, setIsTimerShowing }) => {
 
 	useEffect(() => {
 		const interval = setInterval(() => {
+			Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
 			setRemainingTime((prev) => {
 				if (prev <= 1) {
 					clearInterval(interval);
 					progress.value = withTiming(0, { duration: 500 });
 
-                    setIsTimerShowing(false);
+					setIsTimerShowing(false);
 					return 0;
 				}
 
