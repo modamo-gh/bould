@@ -10,7 +10,7 @@ import Svg, { Circle } from "react-native-svg";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const Timer = ({ duration }) => {
+const Timer = ({ duration, setIsTimerShowing }) => {
 	const radius = 150;
 	const circumference = 2 * Math.PI * radius;
 
@@ -29,6 +29,8 @@ const Timer = ({ duration }) => {
 				if (prev <= 1) {
 					clearInterval(interval);
 					progress.value = withTiming(0, { duration: 500 });
+
+                    setIsTimerShowing(false);
 					return 0;
 				}
 
