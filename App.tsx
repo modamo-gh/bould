@@ -37,7 +37,7 @@ const App = () => {
 					tabBarStyle: {
 						backgroundColor: "#B2BEB5",
 						borderTopWidth: 0
-					}
+					},
 				})}
 			>
 				<Tabs.Screen

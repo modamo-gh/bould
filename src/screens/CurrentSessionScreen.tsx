@@ -5,6 +5,7 @@ import * as Font from "expo-font";
 import Timer from "../components/Timer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Haptics from "expo-haptics";
+import Icon from "react-native-vector-icons/Feather";
 
 const gradePassFailMap = new Map<
 	number | "INTRO",
@@ -56,6 +57,46 @@ const CurrentSessionScreen = () => {
 			{hasSessionStarted ? (
 				!isTimerShowing ? (
 					<>
+						<View
+							style={{
+								flex: 1,
+								maxHeight: 48,
+								width: "100%",
+								justifyContent: "flex-end",
+								flexDirection: "row",
+								padding: 8
+							}}
+						>
+							<View style={{ flex: 1 }}></View>
+							<Pressable
+								onPress={() => {
+									Haptics.impactAsync(
+										Haptics.ImpactFeedbackStyle.Medium
+									);
+									setHasSessionStarted(false);
+								}}
+								style={[
+									onButtonPress,
+									{
+										justifyContent: "center",
+										alignContent: "center"
+									}
+								]}
+							>
+								<Icon
+									name="x-circle"
+									color="#F5F5F5"
+									size={24}
+									style={{
+										textAlign: "center",
+										paddingBottom: 8
+									}}
+								/>
+								<Text style={[styles.text, { fontSize: 24 }]}>
+									Stop Session
+								</Text>
+							</Pressable>
+						</View>
 						<View style={styles.counterContainer}>
 							<Pressable
 								onPress={() => {
@@ -71,15 +112,22 @@ const CurrentSessionScreen = () => {
 								}}
 								style={[
 									onButtonPress,
-									{ height: 96, width: 96 }
+									{
+										maxHeight: 96,
+										width: 96,
+										flex: 1,
+										justifyContent: "center"
+									}
 								]}
 							>
 								<Feather
 									name="chevron-up"
-									style={[styles.text]}
+									style={[styles.text, { fontSize: 64 }]}
 								/>
 							</Pressable>
-							<Text style={styles.text}>V{grade}</Text>
+							<Text style={[styles.text, { fontSize: 64 }]}>
+								V{grade}
+							</Text>
 							<Pressable
 								onPress={() => {
 									Haptics.impactAsync(
@@ -100,12 +148,22 @@ const CurrentSessionScreen = () => {
 								}}
 								style={[
 									onButtonPress,
-									{ height: 96, width: 96 }
+									{
+										maxHeight: 96,
+										width: 96,
+										flex: 1,
+										justifyContent: "center"
+									}
 								]}
 							>
 								<Feather
 									name="chevron-down"
-									style={styles.text}
+									style={[
+										styles.text,
+										{
+											fontSize: 64
+										}
+									]}
 								/>
 							</Pressable>
 						</View>
@@ -176,7 +234,9 @@ const CurrentSessionScreen = () => {
 									{ backgroundColor: "#88B04B" }
 								]}
 							>
-								<Text style={styles.text}>SENT</Text>
+								<Text style={[styles.text, { fontSize: 64 }]}>
+									SENT
+								</Text>
 							</Pressable>
 						</View>
 					</>
@@ -194,7 +254,9 @@ const CurrentSessionScreen = () => {
 					}}
 					style={onButtonPress}
 				>
-					<Text style={styles.text}>Start Session</Text>
+					<Text style={[styles.text, { fontSize: 64 }]}>
+						Start Session
+					</Text>
 				</Pressable>
 			)}
 		</SafeAreaView>
@@ -231,7 +293,6 @@ const styles = StyleSheet.create({
 	text: {
 		color: "#F5F5F5",
 		fontFamily: "Rockledge",
-		fontSize: 64,
 		textAlign: "center"
 	}
 });
