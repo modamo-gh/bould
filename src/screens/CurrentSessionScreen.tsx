@@ -19,6 +19,7 @@ const CurrentSessionScreen = () => {
 	const [fontsLoaded, setFontsLoaded] = useState(false);
 	const [grade, setGrade] = useState<number | "INTRO">("INTRO");
 	const [isTimerShowing, setIsTimerShowing] = useState(false);
+	const [hasSessionStarted, setHasSessionStarted] = useState(false);
 
 	useEffect(() => {
 		Font.loadAsync({
@@ -45,130 +46,156 @@ const CurrentSessionScreen = () => {
 	const onButtonPress = ({ pressed }) => [
 		{
 			alignItems: "center",
-			height: 96,
 			justifyContent: "center",
-			opacity: pressed ? 0.6 : 1,
-			width: 96
+			opacity: pressed ? 0.6 : 1
 		}
 	];
 
 	return (
 		<SafeAreaView style={styles.container}>
-			{!isTimerShowing ? (
-				<>
-					<View style={styles.counterContainer}>
-						<Pressable
-							onPress={() => {
-								Haptics.impactAsync(
-									Haptics.ImpactFeedbackStyle.Medium
-								);
+			{hasSessionStarted ? (
+				!isTimerShowing ? (
+					<>
+						<View style={styles.counterContainer}>
+							<Pressable
+								onPress={() => {
+									Haptics.impactAsync(
+										Haptics.ImpactFeedbackStyle.Medium
+									);
 
-								if (grade === "INTRO") {
-									setGrade(0);
-								} else if (typeof grade === "number") {
-									setGrade(grade + 1);
-								}
-							}}
-							style={onButtonPress}
-						>
-							<Feather name="chevron-up" style={[styles.text]} />
-						</Pressable>
-						<Text style={styles.text}>V{grade}</Text>
-						<Pressable
-							onPress={() => {
-								Haptics.impactAsync(
-									Haptics.ImpactFeedbackStyle.Medium
-								);
+									if (grade === "INTRO") {
+										setGrade(0);
+									} else if (typeof grade === "number") {
+										setGrade(grade + 1);
+									}
+								}}
+								style={[
+									onButtonPress,
+									{ height: 96, width: 96 }
+								]}
+							>
+								<Feather
+									name="chevron-up"
+									style={[styles.text]}
+								/>
+							</Pressable>
+							<Text style={styles.text}>V{grade}</Text>
+							<Pressable
+								onPress={() => {
+									Haptics.impactAsync(
+										Haptics.ImpactFeedbackStyle.Medium
+									);
 
-								if (
-									typeof grade === "number" &&
-									grade - 1 >= 0
-								) {
-									setGrade(grade - 1);
-								} else if (
-									typeof grade === "number" &&
-									grade - 1 === -1
-								) {
-									setGrade("INTRO");
-								}
-							}}
-							style={onButtonPress}
-						>
-							<Feather name="chevron-down" style={styles.text} />
-						</Pressable>
-					</View>
-					<View style={styles.buttonContainer}>
-						<Pressable
-							onPress={() => {
-								Haptics.impactAsync(
-									Haptics.ImpactFeedbackStyle.Medium
-								);
+									if (
+										typeof grade === "number" &&
+										grade - 1 >= 0
+									) {
+										setGrade(grade - 1);
+									} else if (
+										typeof grade === "number" &&
+										grade - 1 === -1
+									) {
+										setGrade("INTRO");
+									}
+								}}
+								style={[
+									onButtonPress,
+									{ height: 96, width: 96 }
+								]}
+							>
+								<Feather
+									name="chevron-down"
+									style={styles.text}
+								/>
+							</Pressable>
+						</View>
+						<View style={styles.buttonContainer}>
+							<Pressable
+								onPress={() => {
+									Haptics.impactAsync(
+										Haptics.ImpactFeedbackStyle.Medium
+									);
 
-								if (isFirstClimb) {
-									setIsFirstClimb(false);
-								} else if (duration + 60 <= 180) {
-									setDuration(duration + 60);
-								}
+									if (isFirstClimb) {
+										setIsFirstClimb(false);
+									} else if (duration + 60 <= 180) {
+										setDuration(duration + 60);
+									}
 
-								const stats = gradePassFailMap.get(grade) || {
-									send: 0,
-									didNotSend: 0
-								};
+									const stats = gradePassFailMap.get(
+										grade
+									) || {
+										send: 0,
+										didNotSend: 0
+									};
 
-								stats.didNotSend = stats.didNotSend + 1;
-								gradePassFailMap.set(grade, stats);
+									stats.didNotSend = stats.didNotSend + 1;
+									gradePassFailMap.set(grade, stats);
 
-								console.log(gradePassFailMap);
+									console.log(gradePassFailMap);
 
-								setIsTimerShowing(!isTimerShowing);
-							}}
-							style={[
-								styles.button,
-								{ backgroundColor: "#C75643" }
-							]}
-						>
-							<Text style={[styles.text, { fontSize: 32 }]}>
-								DID NOT SEND
-							</Text>
-						</Pressable>
-						<Pressable
-							onPress={() => {
-								Haptics.impactAsync(
-									Haptics.ImpactFeedbackStyle.Medium
-								);
+									setIsTimerShowing(!isTimerShowing);
+								}}
+								style={[
+									styles.button,
+									{ backgroundColor: "#C75643" }
+								]}
+							>
+								<Text style={[styles.text, { fontSize: 32 }]}>
+									DID NOT SEND
+								</Text>
+							</Pressable>
+							<Pressable
+								onPress={() => {
+									Haptics.impactAsync(
+										Haptics.ImpactFeedbackStyle.Medium
+									);
 
-								if (isFirstClimb) {
-									setIsFirstClimb(false);
-								} else if (duration - 60 >= 60) {
-									setDuration(duration - 60);
-								}
+									if (isFirstClimb) {
+										setIsFirstClimb(false);
+									} else if (duration - 60 >= 60) {
+										setDuration(duration - 60);
+									}
 
-								const stats = gradePassFailMap.get(grade) || {
-									send: 0,
-									didNotSend: 0
-								};
+									const stats = gradePassFailMap.get(
+										grade
+									) || {
+										send: 0,
+										didNotSend: 0
+									};
 
-								stats.send = stats.send + 1;
-								gradePassFailMap.set(grade, stats);
+									stats.send = stats.send + 1;
+									gradePassFailMap.set(grade, stats);
 
-								console.log(gradePassFailMap);
+									console.log(gradePassFailMap);
 
-								setIsTimerShowing(!isTimerShowing);
-							}}
-							style={[
-								styles.button,
-								{ backgroundColor: "#88B04B" }
-							]}
-						>
-							<Text style={styles.text}>SENT</Text>
-						</Pressable>
-					</View>
-				</>
+									setIsTimerShowing(!isTimerShowing);
+								}}
+								style={[
+									styles.button,
+									{ backgroundColor: "#88B04B" }
+								]}
+							>
+								<Text style={styles.text}>SENT</Text>
+							</Pressable>
+						</View>
+					</>
+				) : (
+					<Timer
+						duration={duration}
+						setIsTimerShowing={setIsTimerShowing}
+					/>
+				)
 			) : (
-				<Timer
-					duration={duration}
-					setIsTimerShowing={setIsTimerShowing}
-				/>
+				<Pressable
+					onPress={() => {
+						setHasSessionStarted(true);
+						Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+					}}
+					style={onButtonPress}
+				>
+					<Text style={styles.text}>Start Session</Text>
+				</Pressable>
 			)}
 		</SafeAreaView>
 	);
