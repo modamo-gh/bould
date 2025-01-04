@@ -7,16 +7,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Haptics from "expo-haptics";
 import Icon from "react-native-vector-icons/Feather";
 
-const gradePassFailMap = new Map<
-	number | "INTRO",
-	{ send: number; didNotSend: number }
->();
+let gradePassFailMap = {};
 
-let data;
+let climberData;
+let sessionKey;
 
 const CurrentSessionScreen = () => {
 	const [isFirstClimb, setIsFirstClimb] = useState(true);
-	const [duration, setDuration] = useState(120);
+	const [duration, setDuration] = useState(1);
 	const [fontsLoaded, setFontsLoaded] = useState(false);
 	const [grade, setGrade] = useState<number | "INTRO">("INTRO");
 	const [isTimerShowing, setIsTimerShowing] = useState(false);
@@ -27,17 +25,21 @@ const CurrentSessionScreen = () => {
 			Rockledge: require("../../assets/fonts/Rockledge-9YYWB.otf")
 		}).then(() => setFontsLoaded(true));
 
-		const loadData = async () => {
-			const d = await AsyncStorage.getItem("zzzzzz");
+		const loadClimberData = async () => {
+			try {
+				const storedClimberData = await AsyncStorage.getItem(
+					"climberData"
+				);
 
-			if (d) {
-				return d;
-			} else {
-				return {};
+				climberData = JSON.parse(storedClimberData) || {};
+			} catch (error) {
+				console.log("Error retrieving data", error);
 			}
+
+			console.log(climberData);
 		};
 
-		data = loadData();
+		loadClimberData();
 	}, []);
 
 	if (!fontsLoaded) {
@@ -69,11 +71,32 @@ const CurrentSessionScreen = () => {
 						>
 							<View style={{ flex: 1 }}></View>
 							<Pressable
-								onPress={() => {
+								onPress={async () => {
 									Haptics.impactAsync(
 										Haptics.ImpactFeedbackStyle.Medium
 									);
+
+									console.log(gradePassFailMap);
+									climberData[sessionKey] = {
+										...gradePassFailMap
+									};
+
+									gradePassFailMap = {};
+
+									try {
+										await AsyncStorage.setItem(
+											"climberData",
+											JSON.stringify(climberData)
+										);
+									} catch (error) {
+										console.log(
+											"Error saving climber data",
+											error
+										);
+									}
+
 									setHasSessionStarted(false);
+									console.log("Reached")
 								}}
 								style={[
 									onButtonPress,
@@ -180,15 +203,10 @@ const CurrentSessionScreen = () => {
 										setDuration(duration + 60);
 									}
 
-									const stats = gradePassFailMap.get(
+									gradePassFailMap[grade] = gradePassFailMap[
 										grade
-									) || {
-										send: 0,
-										didNotSend: 0
-									};
-
-									stats.didNotSend = stats.didNotSend + 1;
-									gradePassFailMap.set(grade, stats);
+									] || { sent: 0, didNotSend: 0 };
+									gradePassFailMap[grade]["didNotSend"]++;
 
 									console.log(gradePassFailMap);
 
@@ -215,15 +233,10 @@ const CurrentSessionScreen = () => {
 										setDuration(duration - 60);
 									}
 
-									const stats = gradePassFailMap.get(
+									gradePassFailMap[grade] = gradePassFailMap[
 										grade
-									) || {
-										send: 0,
-										didNotSend: 0
-									};
-
-									stats.send = stats.send + 1;
-									gradePassFailMap.set(grade, stats);
+									] || { sent: 0, didNotSend: 0 };
+									gradePassFailMap[grade]["sent"]++;
 
 									console.log(gradePassFailMap);
 
@@ -249,6 +262,8 @@ const CurrentSessionScreen = () => {
 			) : (
 				<Pressable
 					onPress={() => {
+						sessionKey = new Date().toISOString();
+
 						setHasSessionStarted(true);
 						Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 					}}
