@@ -3,13 +3,12 @@ import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import * as Font from "expo-font";
 import Timer from "../components/Timer";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Haptics from "expo-haptics";
 import Icon from "react-native-vector-icons/Feather";
+import { useClimberData } from "../contexts/ClimberDataContext";
 
 let gradePassFailMap = {};
 
-let climberData;
 let sessionKey;
 
 const CurrentSessionScreen = () => {
@@ -20,26 +19,12 @@ const CurrentSessionScreen = () => {
 	const [isTimerShowing, setIsTimerShowing] = useState(false);
 	const [hasSessionStarted, setHasSessionStarted] = useState(false);
 
+	const { addSessionData, climberData } = useClimberData();
+
 	useEffect(() => {
 		Font.loadAsync({
 			Rockledge: require("../../assets/fonts/Rockledge-9YYWB.otf")
 		}).then(() => setFontsLoaded(true));
-
-		const loadClimberData = async () => {
-			try {
-				const storedClimberData = await AsyncStorage.getItem(
-					"climberData"
-				);
-
-				climberData = JSON.parse(storedClimberData) || {};
-			} catch (error) {
-				console.log("Error retrieving data", error);
-			}
-
-			console.log(climberData);
-		};
-
-		loadClimberData();
 	}, []);
 
 	if (!fontsLoaded) {
@@ -76,27 +61,10 @@ const CurrentSessionScreen = () => {
 										Haptics.ImpactFeedbackStyle.Medium
 									);
 
-									console.log(gradePassFailMap);
-									climberData[sessionKey] = {
-										...gradePassFailMap
-									};
-
+									addSessionData(sessionKey, gradePassFailMap);
 									gradePassFailMap = {};
 
-									try {
-										await AsyncStorage.setItem(
-											"climberData",
-											JSON.stringify(climberData)
-										);
-									} catch (error) {
-										console.log(
-											"Error saving climber data",
-											error
-										);
-									}
-
 									setHasSessionStarted(false);
-									console.log("Reached")
 								}}
 								style={[
 									onButtonPress,
