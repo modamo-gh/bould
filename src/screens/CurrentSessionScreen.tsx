@@ -6,6 +6,7 @@ import Timer from "../components/Timer";
 import * as Haptics from "expo-haptics";
 import Icon from "react-native-vector-icons/Feather";
 import { useClimberData } from "../contexts/ClimberDataContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 let gradePassFailMap = {};
 
@@ -13,7 +14,7 @@ let sessionKey;
 
 const CurrentSessionScreen = () => {
 	const [isFirstClimb, setIsFirstClimb] = useState(true);
-	const [duration, setDuration] = useState(1);
+	const [duration, setDuration] = useState(60);
 	const [fontsLoaded, setFontsLoaded] = useState(false);
 	const [grade, setGrade] = useState<number | "INTRO">("INTRO");
 	const [isTimerShowing, setIsTimerShowing] = useState(false);

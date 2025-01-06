@@ -7,6 +7,8 @@ import rockledge from "../../assets/fonts/Rockledge-9YYWB.otf";
 const PastSessionsScreen = () => {
 	const { climberData } = useClimberData();
 
+	console.log(climberData);
+
 	const formattedData = Object.keys(climberData || {}).flatMap((session) =>
 		Object.keys(climberData[session]).map((grade) => ({
 			grade,
@@ -17,13 +19,99 @@ const PastSessionsScreen = () => {
 		}))
 	);
 
-	const stats = { totalAttempts: 0, totalSuccessfulAttempts: 0, cumulativeGrade: 0 };
+	const stats = {
+		totalAttempts: 0,
+		totalSuccessfulAttempts: 0,
+		cumulativeGrade: 0,
+		cumulativeSentGrade: 0,
+		modeAttempt: [],
+		modeSends: [],
+		highestNumberOfAttempts: 0,
+		highestNumberOfSends: 0,
+		lowerMedianIndex: 0,
+		upperMedianIndex: 0,
+		lowerSentMedianIndex: 0,
+		upperSentMedianIndex: 0,
+		attemptMedians: new Set<number>(),
+		sentMedians: new Set<number>()
+	};
 
 	formattedData.forEach((datum) => {
-		stats.cumulativeGrade += 0;
+		stats.cumulativeGrade += datum.grade * datum.attempts;
+		stats.cumulativeSentGrade += datum.grade * datum.sends;
 		stats.totalAttempts += datum.attempts;
 		stats.totalSuccessfulAttempts += datum.sends;
+
+		if (datum.attempts >= stats.highestNumberOfAttempts) {
+			stats.highestNumberOfAttempts = datum.attempts;
+		}
+
+		if (datum.sends >= stats.highestNumberOfSends) {
+			stats.highestNumberOfSends = datum.sends;
+		}
 	});
+
+	stats.lowerMedianIndex = Math.floor((stats.totalAttempts - 1) / 2);
+	stats.upperMedianIndex = Math.ceil((stats.totalAttempts - 1) / 2);
+
+	let currentIndex = 0;
+
+	for (const datum of formattedData) {
+		currentIndex += datum.attempts;
+
+		if (currentIndex >= stats.lowerMedianIndex) {
+			stats.attemptMedians.add(datum.grade);
+			currentIndex = 0;
+			break;
+		}
+	}
+
+	for (const datum of formattedData) {
+		currentIndex += datum.attempts;
+
+		if (currentIndex >= stats.upperMedianIndex) {
+			stats.attemptMedians.add(datum.grade);
+			currentIndex = 0;
+			break;
+		}
+	}
+
+	stats.lowerSentMedianIndex = Math.floor(
+		(stats.totalSuccessfulAttempts - 1) / 2
+	);
+	stats.upperSentMedianIndex = Math.ceil(
+		(stats.totalSuccessfulAttempts - 1) / 2
+	);
+
+	for (const datum of formattedData) {
+		currentIndex += datum.sends;
+
+		if (currentIndex >= stats.lowerSentMedianIndex) {
+			stats.sentMedians.add(datum.grade);
+			currentIndex = 0;
+			break;
+		}
+	}
+
+	for (const datum of formattedData) {
+		currentIndex += datum.sends;
+
+		if (currentIndex >= stats.upperSentMedianIndex) {
+			stats.sentMedians.add(datum.grade);
+			currentIndex = 0;
+			break;
+		}
+	}
+
+	stats.modeAttempt = formattedData
+		.filter((datum) => datum.attempts === stats.highestNumberOfAttempts)
+		.map((datum) => datum.grade);
+
+	stats.modeSends = formattedData
+		.filter((datum) => datum.sends === stats.highestNumberOfSends)
+		.map((datum) => datum.grade);
+
+	console.log(stats);
 
 	const font = useFont(rockledge, 12);
 
@@ -71,7 +159,34 @@ const PastSessionsScreen = () => {
 							stats.totalAttempts
 						).toFixed(2)}%`}
 					</Text>
-					<Text>Your mean grade was</Text>
+					<Text>{`Your mean grade was ${(
+						stats.cumulativeGrade / stats.totalAttempts
+					).toFixed(2)}, so let's call that about a ${Math.round(
+						stats.cumulativeGrade / stats.totalAttempts
+					)}`}</Text>
+					<Text>{`Your mean sent grade was ${(
+						stats.cumulativeSentGrade /
+						stats.totalSuccessfulAttempts
+					).toFixed(2)}, so let's call that about a ${Math.round(
+						stats.cumulativeSentGrade /
+							stats.totalSuccessfulAttempts
+					)}`}</Text>
+					<Text>{`Your mode attempted grade(s) was/were ${stats.modeAttempt.join(
+						", "
+					)}`}</Text>
+					<Text>{`Your mode sent grade(s) was/were ${stats.modeSends.join(
+						", "
+					)}`}</Text>
+					<Text>{`Your median attempted grade(s) was/were ${[
+						...stats.attemptMedians
+					].reduce((p, c) => p + c, 0) / [
+						...stats.attemptMedians
+					].length}`}</Text>
+					<Text>{`Your median sent grade(s) was/were ${[
+						...stats.sentMedians
+					].reduce((p, c) => p + c, 0) / [
+						...stats.sentMedians
+					].length}`}</Text>
 				</ScrollView>
 			) : null}
 		</SafeAreaView>
