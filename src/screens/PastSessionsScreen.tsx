@@ -10,28 +10,58 @@ import { useClimberData } from "../contexts/ClimberDataContext";
 import { BarGroup, CartesianChart } from "victory-native";
 import { useFont } from "@shopify/react-native-skia";
 import rockledge from "../../assets/fonts/Rockledge-9YYWB.otf";
+import { DateTime } from "luxon";
 
 const PastSessionsScreen = () => {
-	const screenWidth = Dimensions.get("screen").width;
-	const screenHeight = Dimensions.get("screen").height;
+	const { climberData } = useClimberData();
+
+	const screenWidth = Dimensions.get("window").width;
+	const screenHeight = Dimensions.get("window").height;
+
+	const now = DateTime.now();
+
+	const oldestDate = DateTime.fromISO(
+		Object.keys({ ...climberData }).sort()[0]
+	);
+
+	const timeIntervals = [];
+
+	const generateIntervals = (timeUnit: string, maxOfUnit: number) => {
+		const timeObject: { [key: string]: number } = {};
+
+		timeObject[timeUnit] = 1;
+
+		while (
+			now.minus(timeObject) >= oldestDate &&
+			timeObject[timeUnit] < maxOfUnit
+		) {
+			timeIntervals.push({
+				timeUnit: timeUnit,
+				number: timeObject[timeUnit]
+			});
+
+			timeObject[timeUnit] *= 2;
+		}
+	};
+
+	generateIntervals("days", 7);
+	generateIntervals("weeks", 4);
+	generateIntervals("months", 12);
+	generateIntervals("years", Infinity);
+
+	timeIntervals.push({
+		timeUnit: "days",
+		number: Infinity
+	});
 
 	return (
-		<View
+		<SafeAreaView
 			style={{
-				flex: 1,
-				backgroundColor: "green"
+				flex: 1
 			}}
 		>
 			<FlatList
-				data={[
-					"red",
-					"orange",
-					"yellow",
-					"green",
-					"blue",
-					"indigo",
-					"violet"
-				]}
+				data={timeIntervals}
 				keyExtractor={({ item, index }) => index}
 				horizontal
 				pagingEnabled
@@ -42,16 +72,18 @@ const PastSessionsScreen = () => {
 				renderItem={({ item }) => (
 					<View
 						style={{
-							backgroundColor: item,
 							height: screenHeight,
-							width: screenWidth
+							width: screenWidth,
+							justifyContent: "center",
+							alignItems: "center"
 						}}
-					></View>
+					>
+						<Text>{JSON.stringify(item)}</Text>
+					</View>
 				)}
 			/>
-		</View>
+		</SafeAreaView>
 	);
-	// const { climberData } = useClimberData();
 
 	// console.log(climberData);
 
