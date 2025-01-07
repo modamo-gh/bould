@@ -5,18 +5,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Feather";
 import { ClimberDataProvider } from "./src/contexts/ClimberDataContext";
 
-const Tabs = createBottomTabNavigator({
-	screens: {
-		PastSessions: PastSessionsScreen,
-		CurrentSession: CurrentSessionScreen
-	}
-});
+const Tabs = createBottomTabNavigator();
 
 const App = () => {
 	return (
 		<ClimberDataProvider>
 			<NavigationContainer>
 				<Tabs.Navigator
+					initialRouteName="Current Session"
 					screenOptions={({ route }) => ({
 						headerShown: false,
 						tabBarActiveTintColor: "#F5F5F5",
