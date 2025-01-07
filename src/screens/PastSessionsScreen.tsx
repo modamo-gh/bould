@@ -72,7 +72,7 @@ const PastSessionsScreen = () => {
 		>
 			<FlatList
 				data={timeIntervals}
-				keyExtractor={({ item, index }) => index}
+				keyExtractor={(item, index ) => index.toString()}
 				horizontal
 				pagingEnabled
 				decelerationRate={"fast"}
