@@ -249,7 +249,11 @@ const PastSessionsScreen = () => {
 											}}
 										>
 											<CartesianChart
-												axisOptions={{font, formatXLabel: (grade) => `V${grade}` }}
+												axisOptions={{
+													font,
+													formatXLabel: (grade) =>
+														`V${grade}`
+												}}
 												data={formattedData}
 												padding={24}
 												domainPadding={{
@@ -457,7 +461,41 @@ const PastSessionsScreen = () => {
 											{!isRecommendationsExpanded ? (
 												<Text>Recommendations</Text>
 											) : (
-												<Text>Keep climbing!</Text>
+												<>
+													<Text>{`Based on the mean, median, and mode of your sends, your baseline grade is a V${Math.floor(
+														(Number(
+															stats.modeSends[0]
+														) +
+															Math.round(
+																stats.cumulativeSentGrade /
+																	stats.totalSuccessfulAttempts
+															) +
+															Number(
+																[
+																	...stats.sentMedians
+																][0]
+															)) /
+															3
+													)}`}</Text>
+													<Text>{`For your next session warmup, start with a V${Math.floor(
+														Math.floor(
+															(Number(
+																stats
+																	.modeSends[0]
+															) +
+																Math.round(
+																	stats.cumulativeSentGrade /
+																		stats.totalSuccessfulAttempts
+																) +
+																Number(
+																	[
+																		...stats.sentMedians
+																	][0]
+																)) /
+																3
+														) * 0.7
+													)}`}</Text>
+												</>
 											)}
 										</Pressable>
 									</ScrollView>
