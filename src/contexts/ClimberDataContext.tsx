@@ -1,17 +1,23 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+	createContext,
+	ReactNode,
+	useContext,
+	useEffect,
+	useState
+} from "react";
+import { ClimberDataProviderProps } from "../types/types";
 
 const ClimberDataContext = createContext({});
 
-export const ClimberDataProvider = ({ children }) => {
+export const ClimberDataProvider: React.FC<ClimberDataProviderProps> = ({ children }: { children: ReactNode }) => {
 	const [climberData, setClimberData] = useState();
 
 	useEffect(() => {
 		(async () => {
 			try {
-				let storedClimberData = await AsyncStorage.getItem(
-					"climberData"
-				);
+				let storedClimberData =
+					(await AsyncStorage.getItem("climberData")) || "";
 
 				storedClimberData = JSON.parse(storedClimberData) || {};
 
