@@ -1,6 +1,7 @@
 import {
 	Dimensions,
 	FlatList,
+	Pressable,
 	SafeAreaView,
 	ScrollView,
 	Text,
@@ -11,8 +12,15 @@ import { BarGroup, CartesianChart } from "victory-native";
 import { useFont } from "@shopify/react-native-skia";
 import rockledge from "../../assets/fonts/Rockledge-9YYWB.otf";
 import { DateTime, Duration } from "luxon";
+import { useState } from "react";
 
 const PastSessionsScreen = () => {
+	const [safeAreaHeight, setSafeAreaHeight] = useState(0);
+	const [isAttemptsExpanded, setIsAttemptsExpanded] = useState(false);
+	const [isSentsExpanded, setIsSentsExpanded] = useState(false);
+	const [isRecommendationsExpanded, setIsRecommendationssExpanded] =
+		useState(false);
+
 	const { climberData } = useClimberData();
 
 	const font = useFont(rockledge, 12);
@@ -200,110 +208,245 @@ const PastSessionsScreen = () => {
 						.map((datum) => datum.grade);
 
 					return (
-						<SafeAreaView
+						<View
+							onLayout={(event) => {
+								const { height } = event.nativeEvent.layout;
+								setSafeAreaHeight(height);
+							}}
 							style={{ flex: 1, backgroundColor: "#B2BEB5" }}
 						>
 							{formattedData.length ? (
-								<ScrollView style={{ width: screenWidth }}>
-									<Text
-										style={{
-											textAlign: "center",
-											fontFamily: "Rockledge"
-										}}
-									>
-										{Number.isFinite(number)
-											? `Past ${number} ${timeUnit}`
-											: "All Time"}
-									</Text>
+								<View style={{ flex: 1, width: screenWidth }}>
 									<View
 										style={{
-											height: 0.65 * screenHeight,
-											padding: 16
+											justifyContent: "center",
+											alignItems: "center",
+											height: 48
 										}}
 									>
-										<CartesianChart
-											xAxis={{ font }}
-											data={formattedData}
-											domainPadding={{
-												left: 50,
-												right: 50
+										<Text
+											style={{
+												textAlign: "center",
+												fontFamily: "Rockledge",
+												fontSize: 24
 											}}
-											xKey={"grade"}
-											yKeys={["sends", "attempts"]}
 										>
-											{({ points, chartBounds }) => (
-												<BarGroup
-													chartBounds={chartBounds}
-													betweenGroupPadding={0.3}
-													withinGroupPadding={0.1}
-													roundedCorners={{
-														topLeft: 5,
-														topRight: 5
-													}}
-												>
-													<BarGroup.Bar
-														points={points.sends}
-														color="green"
-													/>
-													<BarGroup.Bar
-														points={points.attempts}
-														color="red"
-													/>
-												</BarGroup>
-											)}
-										</CartesianChart>
+											{Number.isFinite(number)
+												? `Past ${number} ${timeUnit}`
+												: "All Time"}
+										</Text>
 									</View>
-									<Text>
-										{`You attempted ${stats.totalAttempts} climbs during this timeframe`}
-									</Text>
-									<Text>
-										{`You sent ${
-											stats.totalSuccessfulAttempts
-										} climbs during this timeframe for a success rate of ${(
-											(100 *
-												stats.totalSuccessfulAttempts) /
-											stats.totalAttempts
-										).toFixed(2)}%`}
-									</Text>
-									<Text>{`Your mean grade was ${(
-										stats.cumulativeGrade /
-										stats.totalAttempts
-									).toFixed(
-										2
-									)}, so let's call that about a ${Math.round(
-										stats.cumulativeGrade /
-											stats.totalAttempts
-									)}`}</Text>
-									<Text>{`Your mean sent grade was ${(
-										stats.cumulativeSentGrade /
-										stats.totalSuccessfulAttempts
-									).toFixed(
-										2
-									)}, so let's call that about a ${Math.round(
-										stats.cumulativeSentGrade /
-											stats.totalSuccessfulAttempts
-									)}`}</Text>
-									<Text>{`Your mode attempted grade(s) was/were ${stats.modeAttempt.join(
-										", "
-									)}`}</Text>
-									<Text>{`Your mode sent grade(s) was/were ${stats.modeSends.join(
-										", "
-									)}`}</Text>
-									<Text>{`Your median attempted grade(s) was/were ${
-										[...stats.attemptMedians].reduce(
-											(p, c) => p + c,
-											0
-										) / [...stats.attemptMedians].length
-									}`}</Text>
-									<Text>{`Your median sent grade(s) was/were ${
-										[...stats.sentMedians].reduce(
-											(p, c) => p + c,
-											0
-										) / [...stats.sentMedians].length
-									}`}</Text>
-								</ScrollView>
+									<ScrollView
+										bounces={false}
+										style={{
+											flex: 1
+										}}
+									>
+										<View
+											style={{
+												flexGrow: 1,
+												minHeight: safeAreaHeight - 192
+											}}
+										>
+											<CartesianChart
+												xAxis={{ font }}
+												data={formattedData}
+												domainPadding={{
+													left: 50,
+													right: 50
+												}}
+												xKey={"grade"}
+												yKeys={["sends", "attempts"]}
+											>
+												{({ points, chartBounds }) => (
+													<BarGroup
+														chartBounds={
+															chartBounds
+														}
+														betweenGroupPadding={
+															0.3
+														}
+														withinGroupPadding={0.1}
+														roundedCorners={{
+															topLeft: 5,
+															topRight: 5
+														}}
+													>
+														<BarGroup.Bar
+															points={
+																points.sends
+															}
+															color="green"
+														/>
+														<BarGroup.Bar
+															points={
+																points.attempts
+															}
+															color="red"
+														/>
+													</BarGroup>
+												)}
+											</CartesianChart>
+										</View>
+										<Pressable
+											onPress={() =>
+												setIsAttemptsExpanded(
+													!isAttemptsExpanded
+												)
+											}
+											style={
+												isAttemptsExpanded
+													? {
+															height: 96,
+															backgroundColor:
+																"purple",
+															justifyContent:
+																"center",
+															paddingLeft: 8
+													  }
+													: {
+															height: 48,
+															backgroundColor:
+																"purple",
+															justifyContent:
+																"center",
+															paddingLeft: 8
+													  }
+											}
+										>
+											{!isAttemptsExpanded ? (
+												<Text>All Attempts</Text>
+											) : (
+												<>
+													<Text>
+														{`You attempted ${stats.totalAttempts} climbs during this timeframe`}
+													</Text>
+													<Text>{`Your mean grade was ${(
+														stats.cumulativeGrade /
+														stats.totalAttempts
+													).toFixed(
+														2
+													)}, so let's call that about a ${Math.round(
+														stats.cumulativeGrade /
+															stats.totalAttempts
+													)}`}</Text>
+													<Text>{`Your mode attempted grade(s) was/were ${stats.modeAttempt.join(
+														", "
+													)}`}</Text>
+													<Text>{`Your median attempted grade(s) was/were ${
+														[
+															...stats.attemptMedians
+														].reduce(
+															(p, c) => p + c,
+															0
+														) /
+														[
+															...stats.attemptMedians
+														].length
+													}`}</Text>
+												</>
+											)}
+										</Pressable>
+										<Pressable
+											onPress={() =>
+												setIsSentsExpanded(
+													!isSentsExpanded
+												)
+											}
+											style={
+												isSentsExpanded
+													? {
+															height: 96,
+															backgroundColor:
+																"yellow",
+															justifyContent:
+																"center",
+															paddingLeft: 8
+													  }
+													: {
+															height: 48,
+															backgroundColor:
+																"yellow",
+															justifyContent:
+																"center",
+															paddingLeft: 8
+													  }
+											}
+										>
+											{!isSentsExpanded ? (
+												<Text>All Sends</Text>
+											) : (
+												<>
+													<Text>
+														{`You sent ${
+															stats.totalSuccessfulAttempts
+														} climbs during this timeframe for a success rate of ${(
+															(100 *
+																stats.totalSuccessfulAttempts) /
+															stats.totalAttempts
+														).toFixed(2)}%`}
+													</Text>
+													<Text>{`Your mean sent grade was ${(
+														stats.cumulativeSentGrade /
+														stats.totalSuccessfulAttempts
+													).toFixed(
+														2
+													)}, so let's call that about a ${Math.round(
+														stats.cumulativeSentGrade /
+															stats.totalSuccessfulAttempts
+													)}`}</Text>
+													<Text>{`Your mode sent grade(s) was/were ${stats.modeSends.join(
+														", "
+													)}`}</Text>
+													<Text>{`Your median sent grade(s) was/were ${
+														[
+															...stats.sentMedians
+														].reduce(
+															(p, c) => p + c,
+															0
+														) /
+														[...stats.sentMedians]
+															.length
+													}`}</Text>
+												</>
+											)}
+										</Pressable>
+										<Pressable
+											onPress={() =>
+												setIsRecommendationssExpanded(
+													!isRecommendationsExpanded
+												)
+											}
+											style={
+												isRecommendationsExpanded
+													? {
+															height: 96,
+															backgroundColor:
+																"green",
+															justifyContent:
+																"center",
+															paddingLeft: 8
+													  }
+													: {
+															height: 48,
+															backgroundColor:
+																"green",
+															justifyContent:
+																"center",
+															paddingLeft: 8
+													  }
+											}
+										>
+											{!isRecommendationsExpanded ? (
+												<Text>Recommendations</Text>
+											) : (
+												<Text>Keep climbing!</Text>
+											)}
+										</Pressable>
+									</ScrollView>
+								</View>
 							) : null}
-						</SafeAreaView>
+						</View>
 					);
 				}}
 			/>
