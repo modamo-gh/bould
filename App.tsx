@@ -26,6 +26,8 @@ const App = () => {
 								case "Current Session":
 									iconName = "sun";
 									break;
+								default:
+									iconName = "alert-circle";
 							}
 
 							return (
