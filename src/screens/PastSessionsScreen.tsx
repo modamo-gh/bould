@@ -228,7 +228,8 @@ const PastSessionsScreen = () => {
 											style={{
 												textAlign: "center",
 												fontFamily: "Rockledge",
-												fontSize: 24
+												fontSize: 24,
+												color: "#F5F5F5"
 											}}
 										>
 											{Number.isFinite(number)
@@ -327,13 +328,35 @@ const PastSessionsScreen = () => {
 											}
 										>
 											{!isAttemptsExpanded ? (
-												<Text style={{color: "#F5F5F5"}}>All Attempts</Text>
+												<Text
+													style={{
+														color: "#F5F5F5",
+														fontSize: 24,
+														fontFamily: "Rockledge"
+													}}
+												>
+													All Attempts
+												</Text>
 											) : (
 												<>
-													<Text style={{color: "#F5F5F5"}}>
+													<Text
+														style={{
+															color: "#F5F5F5",
+															fontSize: 16,
+															fontFamily:
+																"Rockledge"
+														}}
+													>
 														{`You attempted ${stats.totalAttempts} climbs during this timeframe`}
 													</Text>
-													<Text style={{color: "#F5F5F5"}}>{`Your mean grade was ${(
+													<Text
+														style={{
+															color: "#F5F5F5",
+															fontSize: 16,
+															fontFamily:
+																"Rockledge"
+														}}
+													>{`Your mean grade was ${(
 														stats.cumulativeGrade /
 														stats.totalAttempts
 													).toFixed(
@@ -342,10 +365,24 @@ const PastSessionsScreen = () => {
 														stats.cumulativeGrade /
 															stats.totalAttempts
 													)}`}</Text>
-													<Text style={{color: "#F5F5F5"}}>{`Your mode attempted grade(s) was/were ${stats.modeAttempt.join(
+													<Text
+														style={{
+															color: "#F5F5F5",
+															fontSize: 16,
+															fontFamily:
+																"Rockledge"
+														}}
+													>{`Your mode attempted grade(s) was/were ${stats.modeAttempt.join(
 														", "
 													)}`}</Text>
-													<Text style={{color: "#F5F5F5"}}>{`Your median attempted grade(s) was/were ${
+													<Text
+														style={{
+															color: "#F5F5F5",
+															fontSize: 16,
+															fontFamily:
+																"Rockledge"
+														}}
+													>{`Your median attempted grade(s) was/were ${
 														[
 															...stats.attemptMedians
 														].reduce(
@@ -392,10 +429,25 @@ const PastSessionsScreen = () => {
 											}
 										>
 											{!isSentsExpanded ? (
-												<Text style={{color: "#F5F5F5"}}>All Sends</Text>
+												<Text
+													style={{
+														color: "#F5F5F5",
+														fontSize: 24,
+														fontFamily: "Rockledge"
+													}}
+												>
+													All Sends
+												</Text>
 											) : (
 												<>
-													<Text style={{color: "#F5F5F5"}}>
+													<Text
+														style={{
+															color: "#F5F5F5",
+															fontSize: 16,
+															fontFamily:
+																"Rockledge"
+														}}
+													>
 														{`You sent ${
 															stats.totalSuccessfulAttempts
 														} climbs during this timeframe for a success rate of ${(
@@ -404,7 +456,14 @@ const PastSessionsScreen = () => {
 															stats.totalAttempts
 														).toFixed(2)}%`}
 													</Text>
-													<Text style={{color: "#F5F5F5"}}>{`Your mean sent grade was ${(
+													<Text
+														style={{
+															color: "#F5F5F5",
+															fontSize: 16,
+															fontFamily:
+																"Rockledge"
+														}}
+													>{`Your mean sent grade was ${(
 														stats.cumulativeSentGrade /
 														stats.totalSuccessfulAttempts
 													).toFixed(
@@ -413,10 +472,24 @@ const PastSessionsScreen = () => {
 														stats.cumulativeSentGrade /
 															stats.totalSuccessfulAttempts
 													)}`}</Text>
-													<Text style={{color: "#F5F5F5"}}>{`Your mode sent grade(s) was/were ${stats.modeSends.join(
+													<Text
+														style={{
+															color: "#F5F5F5",
+															fontSize: 16,
+															fontFamily:
+																"Rockledge"
+														}}
+													>{`Your mode sent grade(s) was/were ${stats.modeSends.join(
 														", "
 													)}`}</Text>
-													<Text style={{color: "#F5F5F5"}}>{`Your median sent grade(s) was/were ${
+													<Text
+														style={{
+															color: "#F5F5F5",
+															fontSize: 16,
+															fontFamily:
+																"Rockledge"
+														}}
+													>{`Your median sent grade(s) was/were ${
 														[
 															...stats.sentMedians
 														].reduce(
@@ -460,10 +533,25 @@ const PastSessionsScreen = () => {
 											}
 										>
 											{!isRecommendationsExpanded ? (
-												<Text style={{color: "#F5F5F5"}}>Recommendations</Text>
+												<Text
+													style={{
+														color: "#F5F5F5",
+														fontSize: 24,
+														fontFamily: "Rockledge"
+													}}
+												>
+													Recommendations
+												</Text>
 											) : (
 												<>
-													<Text style={{color: "#F5F5F5"}}>{`Based on the mean, median, and mode of your sends, your baseline grade is a V${Math.floor(
+													<Text
+														style={{
+															color: "#F5F5F5",
+															fontSize: 16,
+															fontFamily:
+																"Rockledge"
+														}}
+													>{`Based on the mean, median, and mode of your sends, your baseline grade is a V${Math.floor(
 														(Number(
 															stats.modeSends[0]
 														) +
@@ -478,7 +566,14 @@ const PastSessionsScreen = () => {
 															)) /
 															3
 													)}`}</Text>
-													<Text style={{color: "#F5F5F5"}}>{`For your next session warmup, start with a V${Math.floor(
+													<Text
+														style={{
+															color: "#F5F5F5",
+															fontSize: 16,
+															fontFamily:
+																"Rockledge"
+														}}
+													>{`For your next session warmup, start with a V${Math.floor(
 														Math.floor(
 															(Number(
 																stats
