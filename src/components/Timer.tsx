@@ -8,10 +8,11 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Circle } from "react-native-svg";
 import * as Haptics from "expo-haptics";
+import { TimerProps } from "../types/types";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const Timer = ({ duration, setIsTimerShowing }) => {
+const Timer: React.FC<TimerProps> = ({ duration, setIsTimerShowing }) => {
 	const radius = 150;
 	const circumference = 2 * Math.PI * radius;
 
