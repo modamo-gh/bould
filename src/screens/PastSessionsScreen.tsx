@@ -252,7 +252,8 @@ const PastSessionsScreen = () => {
 												axisOptions={{
 													font,
 													formatXLabel: (grade) =>
-														`V${grade}`
+														`V${grade}`,
+													labelColor: "#F5F5F5"
 												}}
 												data={formattedData}
 												padding={24}
@@ -281,13 +282,13 @@ const PastSessionsScreen = () => {
 															points={
 																points.sends
 															}
-															color="green"
+															color="#88B04B"
 														/>
 														<BarGroup.Bar
 															points={
 																points.attempts
 															}
-															color="red"
+															color="#C75643"
 														/>
 													</BarGroup>
 												)}
@@ -304,7 +305,7 @@ const PastSessionsScreen = () => {
 													? {
 															minHeight: 96,
 															backgroundColor:
-																"purple",
+																"#5A5A5A",
 															justifyContent:
 																"center",
 															padding: 8,
@@ -315,7 +316,7 @@ const PastSessionsScreen = () => {
 													: {
 															minHeight: 48,
 															backgroundColor:
-																"purple",
+																"#5A5A5A",
 															justifyContent:
 																"center",
 															padding: 8,
@@ -326,13 +327,13 @@ const PastSessionsScreen = () => {
 											}
 										>
 											{!isAttemptsExpanded ? (
-												<Text>All Attempts</Text>
+												<Text style={{color: "#F5F5F5"}}>All Attempts</Text>
 											) : (
 												<>
-													<Text>
+													<Text style={{color: "#F5F5F5"}}>
 														{`You attempted ${stats.totalAttempts} climbs during this timeframe`}
 													</Text>
-													<Text>{`Your mean grade was ${(
+													<Text style={{color: "#F5F5F5"}}>{`Your mean grade was ${(
 														stats.cumulativeGrade /
 														stats.totalAttempts
 													).toFixed(
@@ -341,10 +342,10 @@ const PastSessionsScreen = () => {
 														stats.cumulativeGrade /
 															stats.totalAttempts
 													)}`}</Text>
-													<Text>{`Your mode attempted grade(s) was/were ${stats.modeAttempt.join(
+													<Text style={{color: "#F5F5F5"}}>{`Your mode attempted grade(s) was/were ${stats.modeAttempt.join(
 														", "
 													)}`}</Text>
-													<Text>{`Your median attempted grade(s) was/were ${
+													<Text style={{color: "#F5F5F5"}}>{`Your median attempted grade(s) was/were ${
 														[
 															...stats.attemptMedians
 														].reduce(
@@ -369,7 +370,7 @@ const PastSessionsScreen = () => {
 													? {
 															minHeight: 96,
 															backgroundColor:
-																"yellow",
+																"#5A5A5A",
 															justifyContent:
 																"center",
 															padding: 8,
@@ -380,7 +381,7 @@ const PastSessionsScreen = () => {
 													: {
 															minHeight: 48,
 															backgroundColor:
-																"yellow",
+																"#5A5A5A",
 															justifyContent:
 																"center",
 															padding: 8,
@@ -391,10 +392,10 @@ const PastSessionsScreen = () => {
 											}
 										>
 											{!isSentsExpanded ? (
-												<Text>All Sends</Text>
+												<Text style={{color: "#F5F5F5"}}>All Sends</Text>
 											) : (
 												<>
-													<Text>
+													<Text style={{color: "#F5F5F5"}}>
 														{`You sent ${
 															stats.totalSuccessfulAttempts
 														} climbs during this timeframe for a success rate of ${(
@@ -403,7 +404,7 @@ const PastSessionsScreen = () => {
 															stats.totalAttempts
 														).toFixed(2)}%`}
 													</Text>
-													<Text>{`Your mean sent grade was ${(
+													<Text style={{color: "#F5F5F5"}}>{`Your mean sent grade was ${(
 														stats.cumulativeSentGrade /
 														stats.totalSuccessfulAttempts
 													).toFixed(
@@ -412,10 +413,10 @@ const PastSessionsScreen = () => {
 														stats.cumulativeSentGrade /
 															stats.totalSuccessfulAttempts
 													)}`}</Text>
-													<Text>{`Your mode sent grade(s) was/were ${stats.modeSends.join(
+													<Text style={{color: "#F5F5F5"}}>{`Your mode sent grade(s) was/were ${stats.modeSends.join(
 														", "
 													)}`}</Text>
-													<Text>{`Your median sent grade(s) was/were ${
+													<Text style={{color: "#F5F5F5"}}>{`Your median sent grade(s) was/were ${
 														[
 															...stats.sentMedians
 														].reduce(
@@ -439,7 +440,7 @@ const PastSessionsScreen = () => {
 													? {
 															minHeight: 96,
 															backgroundColor:
-																"green",
+																"#5A5A5A",
 															justifyContent:
 																"center",
 															padding: 8,
@@ -449,7 +450,7 @@ const PastSessionsScreen = () => {
 													: {
 															minHeight: 48,
 															backgroundColor:
-																"green",
+																"#5A5A5A",
 															justifyContent:
 																"center",
 															padding: 8,
@@ -459,10 +460,10 @@ const PastSessionsScreen = () => {
 											}
 										>
 											{!isRecommendationsExpanded ? (
-												<Text>Recommendations</Text>
+												<Text style={{color: "#F5F5F5"}}>Recommendations</Text>
 											) : (
 												<>
-													<Text>{`Based on the mean, median, and mode of your sends, your baseline grade is a V${Math.floor(
+													<Text style={{color: "#F5F5F5"}}>{`Based on the mean, median, and mode of your sends, your baseline grade is a V${Math.floor(
 														(Number(
 															stats.modeSends[0]
 														) +
@@ -477,7 +478,7 @@ const PastSessionsScreen = () => {
 															)) /
 															3
 													)}`}</Text>
-													<Text>{`For your next session warmup, start with a V${Math.floor(
+													<Text style={{color: "#F5F5F5"}}>{`For your next session warmup, start with a V${Math.floor(
 														Math.floor(
 															(Number(
 																stats
