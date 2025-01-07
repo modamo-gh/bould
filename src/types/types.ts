@@ -1,4 +1,6 @@
+import { Dispatch, SetStateAction } from "react";
+
 export type TimerProps = {
-    duration: number;
-    setIsTimerShowing: boolean;
-}
+	duration: number;
+	setIsTimerShowing: Dispatch<SetStateAction<Boolean>>;
+};
