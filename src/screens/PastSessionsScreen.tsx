@@ -245,18 +245,19 @@ const PastSessionsScreen = () => {
 										<View
 											style={{
 												flexGrow: 1,
-												minHeight: safeAreaHeight - 192
+												minHeight: safeAreaHeight - 208
 											}}
 										>
 											<CartesianChart
-												xAxis={{ font }}
+												axisOptions={{font, formatXLabel: (grade) => `V${grade}` }}
 												data={formattedData}
+												padding={24}
 												domainPadding={{
 													left: 50,
 													right: 50
 												}}
 												xKey={"grade"}
-												yKeys={["sends", "attempts"]}
+												yKeys={["attempts", "sends"]}
 											>
 												{({ points, chartBounds }) => (
 													<BarGroup
@@ -297,20 +298,26 @@ const PastSessionsScreen = () => {
 											style={
 												isAttemptsExpanded
 													? {
-															height: 96,
+															minHeight: 96,
 															backgroundColor:
 																"purple",
 															justifyContent:
 																"center",
-															paddingLeft: 8
+															padding: 8,
+															borderRadius: 5,
+															marginHorizontal: 8,
+															marginBottom: 8
 													  }
 													: {
-															height: 48,
+															minHeight: 48,
 															backgroundColor:
 																"purple",
 															justifyContent:
 																"center",
-															paddingLeft: 8
+															padding: 8,
+															borderRadius: 5,
+															marginHorizontal: 8,
+															marginBottom: 8
 													  }
 											}
 										>
@@ -356,20 +363,26 @@ const PastSessionsScreen = () => {
 											style={
 												isSentsExpanded
 													? {
-															height: 96,
+															minHeight: 96,
 															backgroundColor:
 																"yellow",
 															justifyContent:
 																"center",
-															paddingLeft: 8
+															padding: 8,
+															borderRadius: 5,
+															marginHorizontal: 8,
+															marginBottom: 8
 													  }
 													: {
-															height: 48,
+															minHeight: 48,
 															backgroundColor:
 																"yellow",
 															justifyContent:
 																"center",
-															paddingLeft: 8
+															padding: 8,
+															borderRadius: 5,
+															marginHorizontal: 8,
+															marginBottom: 8
 													  }
 											}
 										>
@@ -420,20 +433,24 @@ const PastSessionsScreen = () => {
 											style={
 												isRecommendationsExpanded
 													? {
-															height: 96,
+															minHeight: 96,
 															backgroundColor:
 																"green",
 															justifyContent:
 																"center",
-															paddingLeft: 8
+															padding: 8,
+															borderRadius: 5,
+															marginHorizontal: 8
 													  }
 													: {
-															height: 48,
+															minHeight: 48,
 															backgroundColor:
 																"green",
 															justifyContent:
 																"center",
-															paddingLeft: 8
+															padding: 8,
+															borderRadius: 5,
+															marginHorizontal: 8
 													  }
 											}
 										>
