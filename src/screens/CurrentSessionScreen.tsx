@@ -17,6 +17,10 @@ const CurrentSessionScreen = () => {
 	const [duration, setDuration] = useState(60);
 	const [fontsLoaded, setFontsLoaded] = useState(false);
 	const [grade, setGrade] = useState<number | "INTRO">("INTRO");
+	const [nextGrade, setNextGrade] = useState<{
+		grade: number | "INTRO";
+		sent: boolean;
+	}>();
 	const [isTimerShowing, setIsTimerShowing] = useState(false);
 	const [hasSessionStarted, setHasSessionStarted] = useState(false);
 
@@ -62,7 +66,10 @@ const CurrentSessionScreen = () => {
 										Haptics.ImpactFeedbackStyle.Medium
 									);
 
-									addSessionData(sessionKey, gradePassFailMap);
+									addSessionData(
+										sessionKey,
+										gradePassFailMap
+									);
 									gradePassFailMap = {};
 
 									setHasSessionStarted(false);
@@ -117,7 +124,20 @@ const CurrentSessionScreen = () => {
 									style={[styles.text, { fontSize: 64 }]}
 								/>
 							</Pressable>
-							<Text style={[styles.text, { fontSize: 64 }]}>
+							<Text
+								style={[
+									styles.text,
+									{ fontSize: 64 },
+									{
+										color:
+											grade === nextGrade?.grade
+												? nextGrade.sent
+													? "#88B04B"
+													: "#C75643"
+												: "#F5F5F5"
+									}
+								]}
+							>
 								V{grade}
 							</Text>
 							<Pressable
@@ -172,6 +192,24 @@ const CurrentSessionScreen = () => {
 										setDuration(duration + 60);
 									}
 
+									if (
+										typeof grade === "number" &&
+										grade - 1 >= 0
+									) {
+										setNextGrade({
+											grade: grade - 1,
+											sent: false
+										});
+									} else if (
+										typeof grade === "number" &&
+										grade - 1 === -1
+									) {
+										setNextGrade({
+											grade: "INTRO",
+											sent: false
+										});
+									}
+
 									gradePassFailMap[grade] = gradePassFailMap[
 										grade
 									] || { sent: 0, didNotSend: 0 };
@@ -200,6 +238,15 @@ const CurrentSessionScreen = () => {
 										setIsFirstClimb(false);
 									} else if (duration - 60 >= 60) {
 										setDuration(duration - 60);
+									}
+
+									if (grade === "INTRO") {
+										setNextGrade({ grade: 0, sent: true });
+									} else if (typeof grade === "number") {
+										setNextGrade({
+											grade: grade + 1,
+											sent: true
+										});
 									}
 
 									gradePassFailMap[grade] = gradePassFailMap[
