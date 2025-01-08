@@ -23,6 +23,8 @@ const PastSessionsScreen = () => {
 
 	const { climberData } = useClimberData();
 
+	console.log(climberData)
+
 	const font = useFont(rockledge, 12);
 
 	const screenWidth = Dimensions.get("window").width;
@@ -116,8 +118,8 @@ const PastSessionsScreen = () => {
 							attempts:
 								(timeframeData[session["grade"]]
 									? timeframeData[session["grade"]][
-											"attempts"
-									  ]
+									"attempts"
+									]
 									: 0) + session["attempts"]
 						};
 					});
@@ -349,27 +351,27 @@ const PastSessionsScreen = () => {
 											style={
 												isAttemptsExpanded
 													? {
-															minHeight: 96,
-															backgroundColor:
-																"#5A5A5A",
-															justifyContent:
-																"center",
-															padding: 8,
-															borderRadius: 5,
-															marginHorizontal: 8,
-															marginBottom: 8
-													  }
+														minHeight: 96,
+														backgroundColor:
+															"#5A5A5A",
+														justifyContent:
+															"center",
+														padding: 8,
+														borderRadius: 5,
+														marginHorizontal: 8,
+														marginBottom: 8
+													}
 													: {
-															minHeight: 48,
-															backgroundColor:
-																"#5A5A5A",
-															justifyContent:
-																"center",
-															padding: 8,
-															borderRadius: 5,
-															marginHorizontal: 8,
-															marginBottom: 8
-													  }
+														minHeight: 48,
+														backgroundColor:
+															"#5A5A5A",
+														justifyContent:
+															"center",
+														padding: 8,
+														borderRadius: 5,
+														marginHorizontal: 8,
+														marginBottom: 8
+													}
 											}
 										>
 											{!isAttemptsExpanded ? (
@@ -408,7 +410,7 @@ const PastSessionsScreen = () => {
 														2
 													)}, so let's call that about a ${Math.round(
 														stats.cumulativeGrade /
-															stats.totalAttempts
+														stats.totalAttempts
 													)}`}</Text>
 													<Text
 														style={{
@@ -417,19 +419,17 @@ const PastSessionsScreen = () => {
 															fontFamily:
 																"Rockledge"
 														}}
-													>{`The most common grade${
-														stats.modeAttempt
+													>{`The most common grade${stats.modeAttempt
 															.length > 1
 															? "s"
 															: ""
-													} you attempted ${
-														stats.modeAttempt
+														} you attempted ${stats.modeAttempt
 															.length <= 1
 															? "was"
 															: "were"
-													} ${stats.modeAttempt.join(
-														", "
-													)}`}</Text>
+														} ${stats.modeAttempt.join(
+															", "
+														)}`}</Text>
 													<Text
 														style={{
 															color: "#F5F5F5",
@@ -437,18 +437,15 @@ const PastSessionsScreen = () => {
 															fontFamily:
 																"Rockledge"
 														}}
-													>{`Your median attempted grade${
-														stats.attemptMedians
+													>{`Your median attempted grade${stats.attemptMedians
 															.size > 1
 															? "s"
 															: ""
-													} ${
-														stats.attemptMedians
+														} ${stats.attemptMedians
 															.size <= 1
 															? "was"
 															: "were"
-													} ${
-														[
+														} ${[
 															...stats.attemptMedians
 														].reduce(
 															(p, c) =>
@@ -459,7 +456,7 @@ const PastSessionsScreen = () => {
 														[
 															...stats.attemptMedians
 														].length
-													}`}</Text>
+														}`}</Text>
 												</>
 											)}
 										</Pressable>
@@ -472,27 +469,27 @@ const PastSessionsScreen = () => {
 											style={
 												isSentsExpanded
 													? {
-															minHeight: 96,
-															backgroundColor:
-																"#5A5A5A",
-															justifyContent:
-																"center",
-															padding: 8,
-															borderRadius: 5,
-															marginHorizontal: 8,
-															marginBottom: 8
-													  }
+														minHeight: 96,
+														backgroundColor:
+															"#5A5A5A",
+														justifyContent:
+															"center",
+														padding: 8,
+														borderRadius: 5,
+														marginHorizontal: 8,
+														marginBottom: 8
+													}
 													: {
-															minHeight: 48,
-															backgroundColor:
-																"#5A5A5A",
-															justifyContent:
-																"center",
-															padding: 8,
-															borderRadius: 5,
-															marginHorizontal: 8,
-															marginBottom: 8
-													  }
+														minHeight: 48,
+														backgroundColor:
+															"#5A5A5A",
+														justifyContent:
+															"center",
+														padding: 8,
+														borderRadius: 5,
+														marginHorizontal: 8,
+														marginBottom: 8
+													}
 											}
 										>
 											{!isSentsExpanded ? (
@@ -515,13 +512,12 @@ const PastSessionsScreen = () => {
 																"Rockledge"
 														}}
 													>
-														{`You sent ${
-															stats.totalSuccessfulAttempts
-														} climbs for a success rate of ${(
-															(100 *
-																stats.totalSuccessfulAttempts) /
-															stats.totalAttempts
-														).toFixed(2)}%`}
+														{`You sent ${stats.totalSuccessfulAttempts
+															} climbs for a success rate of ${(
+																(100 *
+																	stats.totalSuccessfulAttempts) /
+																stats.totalAttempts
+															).toFixed(2)}%`}
 													</Text>
 													<Text
 														style={{
@@ -537,7 +533,7 @@ const PastSessionsScreen = () => {
 														2
 													)}, so let's call that about a ${Math.round(
 														stats.cumulativeSentGrade /
-															stats.totalSuccessfulAttempts
+														stats.totalSuccessfulAttempts
 													)}`}</Text>
 													<Text
 														style={{
@@ -556,8 +552,7 @@ const PastSessionsScreen = () => {
 															fontFamily:
 																"Rockledge"
 														}}
-													>{`Your median sent grade(s) was/were ${
-														[
+													>{`Your median sent grade(s) was/were ${[
 															...stats.sentMedians
 														].reduce(
 															(p, c) => p + c,
@@ -565,7 +560,7 @@ const PastSessionsScreen = () => {
 														) /
 														[...stats.sentMedians]
 															.length
-													}`}</Text>
+														}`}</Text>
 												</>
 											)}
 										</Pressable>
@@ -578,25 +573,25 @@ const PastSessionsScreen = () => {
 											style={
 												isRecommendationsExpanded
 													? {
-															minHeight: 96,
-															backgroundColor:
-																"#5A5A5A",
-															justifyContent:
-																"center",
-															padding: 8,
-															borderRadius: 5,
-															marginHorizontal: 8
-													  }
+														minHeight: 96,
+														backgroundColor:
+															"#5A5A5A",
+														justifyContent:
+															"center",
+														padding: 8,
+														borderRadius: 5,
+														marginHorizontal: 8
+													}
 													: {
-															minHeight: 48,
-															backgroundColor:
-																"#5A5A5A",
-															justifyContent:
-																"center",
-															padding: 8,
-															borderRadius: 5,
-															marginHorizontal: 8
-													  }
+														minHeight: 48,
+														backgroundColor:
+															"#5A5A5A",
+														justifyContent:
+															"center",
+														padding: 8,
+														borderRadius: 5,
+														marginHorizontal: 8
+													}
 											}
 										>
 											{!isRecommendationsExpanded ? (
@@ -624,14 +619,14 @@ const PastSessionsScreen = () => {
 														) +
 															Math.round(
 																stats.cumulativeSentGrade /
-																	stats.totalSuccessfulAttempts
+																stats.totalSuccessfulAttempts
 															) +
 															Number(
 																[
 																	...stats.sentMedians
 																][0]
 															)) /
-															3
+														3
 													)}`}</Text>
 													<Text
 														style={{
@@ -648,14 +643,14 @@ const PastSessionsScreen = () => {
 															) +
 																Math.round(
 																	stats.cumulativeSentGrade /
-																		stats.totalSuccessfulAttempts
+																	stats.totalSuccessfulAttempts
 																) +
 																Number(
 																	[
 																		...stats.sentMedians
 																	][0]
 																)) /
-																3
+															3
 														) * 0.7
 													)}`}</Text>
 												</>

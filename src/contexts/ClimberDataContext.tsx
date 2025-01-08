@@ -6,24 +6,25 @@ import {
 	useEffect,
 	useState
 } from "react";
-import { ClimberDataProviderProps } from "../types/types";
+import { ClimberData, ClimberDataProviderProps } from "../types/types";
 
 const ClimberDataContext = createContext({});
 
 export const ClimberDataProvider: React.FC<ClimberDataProviderProps> = ({
 	children
 }) => {
-	const [climberData, setClimberData] = useState();
+	const [climberData, setClimberData] = useState<ClimberData>();
 
 	useEffect(() => {
 		(async () => {
 			try {
-				let storedClimberData =
-					(await AsyncStorage.getItem("climberData")) || "";
+				const storedClimberData: string | null =
+					await AsyncStorage.getItem("climberData");
+				const parsedData: ClimberData = storedClimberData
+					? JSON.parse(storedClimberData)
+					: {};
 
-				storedClimberData = JSON.parse(storedClimberData) || {};
-
-				setClimberData(storedClimberData);
+				setClimberData(parsedData);
 			} catch (error) {
 				console.log("Error retrieving data", error);
 			}
