@@ -6,7 +6,7 @@ import {
 	useEffect,
 	useState
 } from "react";
-import { ClimberData, ClimberDataProviderProps } from "../types/types";
+import { ClimberData, ClimberDataProviderProps, SessionData } from "../types/types";
 
 const ClimberDataContext = createContext({});
 
@@ -31,7 +31,7 @@ export const ClimberDataProvider: React.FC<ClimberDataProviderProps> = ({
 		})();
 	}, []);
 
-	const addSessionData = async (date, sessionData) => {
+	const addSessionData = async (date: string, sessionData: SessionData) => {
 		const newClimberData = { ...climberData };
 
 		newClimberData[date] = sessionData;
