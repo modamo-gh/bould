@@ -72,7 +72,7 @@ const PastSessionsScreen = () => {
 		>
 			<FlatList
 				data={timeIntervals}
-				keyExtractor={(item, index ) => index.toString()}
+				keyExtractor={(item, index) => index.toString()}
 				horizontal
 				pagingEnabled
 				decelerationRate={"fast"}
@@ -105,6 +105,25 @@ const PastSessionsScreen = () => {
 							}))
 						);
 
+					const timeframeData = {};
+
+					formattedData.forEach((session) => {
+						timeframeData[session["grade"]] = {
+							sends:
+								(timeframeData[session["grade"]]
+									? timeframeData[session["grade"]]["sends"]
+									: 0) + session["sends"],
+							attempts:
+								(timeframeData[session["grade"]]
+									? timeframeData[session["grade"]][
+											"attempts"
+									  ]
+									: 0) + session["attempts"]
+						};
+					});
+
+					console.log(timeframeData);
+
 					const stats = {
 						totalAttempts: 0,
 						totalSuccessfulAttempts: 0,
@@ -122,20 +141,33 @@ const PastSessionsScreen = () => {
 						sentMedians: new Set<number>()
 					};
 
-					formattedData.forEach((datum) => {
-						stats.cumulativeGrade += datum.grade * datum.attempts;
-						stats.cumulativeSentGrade += datum.grade * datum.sends;
-						stats.totalAttempts += datum.attempts;
-						stats.totalSuccessfulAttempts += datum.sends;
+					for (const grade in timeframeData) {
+						stats.cumulativeGrade +=
+							Number(Number(grade)) *
+							timeframeData[grade]["attempts"];
+						stats.cumulativeSentGrade +=
+							Number(Number(grade)) *
+							timeframeData[grade]["sends"];
+						stats.totalAttempts += timeframeData[grade]["attempts"];
+						stats.totalSuccessfulAttempts +=
+							timeframeData[grade]["sends"];
 
-						if (datum.attempts >= stats.highestNumberOfAttempts) {
-							stats.highestNumberOfAttempts = datum.attempts;
+						if (
+							timeframeData[grade].attempts >=
+							stats.highestNumberOfAttempts
+						) {
+							stats.highestNumberOfAttempts =
+								timeframeData[grade].attempts;
 						}
 
-						if (datum.sends >= stats.highestNumberOfSends) {
-							stats.highestNumberOfSends = datum.sends;
+						if (
+							timeframeData[grade].sends >=
+							stats.highestNumberOfSends
+						) {
+							stats.highestNumberOfSends =
+								timeframeData[grade].sends;
 						}
-					});
+					}
 
 					stats.lowerMedianIndex = Math.floor(
 						(stats.totalAttempts - 1) / 2
@@ -146,21 +178,21 @@ const PastSessionsScreen = () => {
 
 					let currentIndex = 0;
 
-					for (const datum of formattedData) {
-						currentIndex += datum.attempts;
+					for (const grade in timeframeData) {
+						currentIndex += timeframeData[grade].attempts;
 
 						if (currentIndex >= stats.lowerMedianIndex) {
-							stats.attemptMedians.add(datum.grade);
+							stats.attemptMedians.add(Number(grade));
 							currentIndex = 0;
 							break;
 						}
 					}
 
-					for (const datum of formattedData) {
-						currentIndex += datum.attempts;
+					for (const grade in timeframeData) {
+						currentIndex += timeframeData[grade].attempts;
 
 						if (currentIndex >= stats.upperMedianIndex) {
-							stats.attemptMedians.add(datum.grade);
+							stats.attemptMedians.add(Number(grade));
 							currentIndex = 0;
 							break;
 						}
@@ -173,40 +205,53 @@ const PastSessionsScreen = () => {
 						(stats.totalSuccessfulAttempts - 1) / 2
 					);
 
-					for (const datum of formattedData) {
-						currentIndex += datum.sends;
+					for (const grade in timeframeData) {
+						currentIndex += timeframeData[grade].sends;
 
 						if (currentIndex >= stats.lowerSentMedianIndex) {
-							stats.sentMedians.add(datum.grade);
+							stats.sentMedians.add(Number(grade));
 							currentIndex = 0;
 							break;
 						}
 					}
 
-					for (const datum of formattedData) {
-						currentIndex += datum.sends;
+					for (const grade in timeframeData) {
+						currentIndex += timeframeData[grade].sends;
 
 						if (currentIndex >= stats.upperSentMedianIndex) {
-							stats.sentMedians.add(datum.grade);
+							stats.sentMedians.add(Number(grade));
 							currentIndex = 0;
 							break;
 						}
 					}
 
-					stats.modeAttempt = formattedData
-						.filter(
-							(datum) =>
-								datum.attempts === stats.highestNumberOfAttempts
-						)
-						.map((datum) => datum.grade);
+					for (const grade in timeframeData) {
+						if (
+							timeframeData[grade]["attempts"] ===
+							stats.highestNumberOfAttempts
+						) {
+							stats.modeAttempt.push(Number(grade));
+						}
+					}
 
-					stats.modeSends = formattedData
-						.filter(
-							(datum) =>
-								datum.sends === stats.highestNumberOfSends
-						)
-						.map((datum) => datum.grade);
+					for (const grade in timeframeData) {
+						if (
+							timeframeData[grade]["sends"] ===
+							stats.highestNumberOfSends
+						) {
+							stats.modeSends.push(Number(grade));
+						}
+					}
 
+					const d = Object.entries(timeframeData).map(
+						([grade, stats]) => ({
+							grade: Number(grade),
+							sends: stats.sends,
+							attempts: stats.attempts
+						})
+					);
+
+					console.log(stats);
 					return (
 						<View
 							onLayout={(event) => {
@@ -215,7 +260,7 @@ const PastSessionsScreen = () => {
 							}}
 							style={{ flex: 1, backgroundColor: "#B2BEB5" }}
 						>
-							{formattedData.length ? (
+							{Object.keys(timeframeData).length ? (
 								<View style={{ flex: 1, width: screenWidth }}>
 									<View
 										style={{
@@ -256,7 +301,7 @@ const PastSessionsScreen = () => {
 														`V${grade}`,
 													labelColor: "#F5F5F5"
 												}}
-												data={formattedData}
+												data={d}
 												padding={24}
 												domainPadding={{
 													left: 50,
@@ -347,7 +392,7 @@ const PastSessionsScreen = () => {
 																"Rockledge"
 														}}
 													>
-														{`You attempted ${stats.totalAttempts} climbs during this timeframe`}
+														{`You attempted ${stats.totalAttempts} climbs`}
 													</Text>
 													<Text
 														style={{
@@ -356,7 +401,7 @@ const PastSessionsScreen = () => {
 															fontFamily:
 																"Rockledge"
 														}}
-													>{`Your mean grade was ${(
+													>{`The average grade you attempted was ${(
 														stats.cumulativeGrade /
 														stats.totalAttempts
 													).toFixed(
@@ -372,7 +417,17 @@ const PastSessionsScreen = () => {
 															fontFamily:
 																"Rockledge"
 														}}
-													>{`Your mode attempted grade(s) was/were ${stats.modeAttempt.join(
+													>{`The most common grade${
+														stats.modeAttempt
+															.length > 1
+															? "s"
+															: ""
+													} you attempted ${
+														stats.modeAttempt
+															.length <= 1
+															? "was"
+															: "were"
+													} ${stats.modeAttempt.join(
 														", "
 													)}`}</Text>
 													<Text
@@ -382,11 +437,23 @@ const PastSessionsScreen = () => {
 															fontFamily:
 																"Rockledge"
 														}}
-													>{`Your median attempted grade(s) was/were ${
+													>{`Your median attempted grade${
+														stats.attemptMedians
+															.size > 1
+															? "s"
+															: ""
+													} ${
+														stats.attemptMedians
+															.size <= 1
+															? "was"
+															: "were"
+													} ${
 														[
 															...stats.attemptMedians
 														].reduce(
-															(p, c) => p + c,
+															(p, c) =>
+																Number(p) +
+																Number(c),
 															0
 														) /
 														[
@@ -450,7 +517,7 @@ const PastSessionsScreen = () => {
 													>
 														{`You sent ${
 															stats.totalSuccessfulAttempts
-														} climbs during this timeframe for a success rate of ${(
+														} climbs for a success rate of ${(
 															(100 *
 																stats.totalSuccessfulAttempts) /
 															stats.totalAttempts

@@ -10,7 +10,9 @@ import { ClimberDataProviderProps } from "../types/types";
 
 const ClimberDataContext = createContext({});
 
-export const ClimberDataProvider: React.FC<ClimberDataProviderProps> = ({ children }: { children: ReactNode }) => {
+export const ClimberDataProvider: React.FC<ClimberDataProviderProps> = ({
+	children
+}) => {
 	const [climberData, setClimberData] = useState();
 
 	useEffect(() => {
