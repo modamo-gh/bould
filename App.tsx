@@ -4,6 +4,7 @@ import CurrentSessionScreen from "./src/screens/CurrentSessionScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Feather";
 import { ClimberDataProvider } from "./src/contexts/ClimberDataContext";
+import HomeScreen from "./src/screens/HomeScreen";
 
 const Tabs = createBottomTabNavigator();
 
@@ -50,7 +51,7 @@ const App = () => {
 					></Tabs.Screen>
 					<Tabs.Screen
 						name="Current Session"
-						component={CurrentSessionScreen}
+						component={HomeScreen}
 					></Tabs.Screen>
 				</Tabs.Navigator>
 			</NavigationContainer>
