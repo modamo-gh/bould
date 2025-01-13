@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 let gradePassFailMap = {};
 
-let sessionKey;
+let sessionKey: string;
 
 const CurrentSessionScreen = () => {
 	const [isFirstClimb, setIsFirstClimb] = useState(true);
